@@ -22,7 +22,7 @@ export const callParseMethod = async (method, params = {}, abortController = new
     const _data = await _response.json();
     return _data;
   } catch (error) {
-    return new AppError({ message: error.message });
+    throw new AppError({ message: error.message });
   }
 };
 
