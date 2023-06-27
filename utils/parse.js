@@ -23,7 +23,9 @@ const _initializeParse = () => {
 
 export default () => {
   if (typeof window !== "undefined") {
+    console.log(0);
     if (!_isInit.client) {
+      console.log(1);
       _isInit.client = true;
       _initializeParse();
     }
