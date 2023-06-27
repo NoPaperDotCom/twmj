@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Parse from "@/utils/parse";
+import { callParseMethod } from "@/utils/parse";
 import AppError from "@/utils/error";
 
 import { Loading } from "@/components/elements";
@@ -17,12 +17,13 @@ export default function Index({ gameId }) {
   const [_setting, _setSetting] = React.useState({ status: "loading", game: false, rounds: [] });
 
   React.useEffect(() => {
+    let _abortController = new AbortController();
     const _sessionToken = window.localStorage.getItem("twmj:session-token");
     if (!_sessionToken || _sessionToken.length === 0) {
       if (gameId) { _router.replace(`/oauth/google?requestLink=1&gameId=${gameId}`); }  
       _setSetting(old => ({ ...old, status: "landing" }));
     } else {
-      Parse.Cloud.run("getUser", { sessionToken: _sessionToken })
+      callParseMethod("getUser", { sessionToken: _sessionToken }, _abortController)
       .then(({ status, user, game, error }) => {
         if (status === "unauthorized") {
           window.localStorage.removeItem("twmj:session-token")
@@ -33,8 +34,8 @@ export default function Index({ gameId }) {
         if (error) { throw new AppError({ text: "parse-error", status: 500, message: error }); }
 
         _userRef.current = { ...user, expired: (status === "expired") };
-        if (gameId) { return Parse.Cloud.run("getGame", { sessionToken: _sessionToken, gameId }); }
-        if (game && game.objectId.length > 0) { return Parse.Cloud.run("getGame", { sessionToken: _sessionToken, gameId: game.objectId }); }
+        if (gameId) { return callParseMethod("getGame", { sessionToken: _sessionToken, gameId }, _abortController); }
+        if (game && game.objectId.length > 0) { return callParseMethod("getGame", { sessionToken: _sessionToken, gameId: game.objectId }, _abortController); }
         return { game: false };
       })
       .then(({ status, game, rounds }) => {
@@ -59,7 +60,7 @@ export default function Index({ gameId }) {
       });
     }
 
-    return () => true;
+    return () => _abortController.abort();
   }, [gameId]);
 
   
