@@ -2,7 +2,9 @@ const googleAPI = (typeof window !== "undefined") ? false : require('googleapis'
 
 import React from "react";
 import { useRouter } from "next/router";
-import Parse from "@/utils/parse";
+import getParse from "@/utils/parse";
+const Parse = getParse();
+
 import AppError from "@/utils/error";
 
 import { Loading } from "@/components/elements";
