@@ -11,7 +11,7 @@ export const parseLiveClient = () => {
   return _client;
 };
 
-const _initializeParse = () => {
+export const initializeParse = () => {
   _Parse.initialize(
     process.env.PARSE_APPLICATION_ID,
     process.env.PARSE_JAVASCRIPT_KEY
@@ -20,7 +20,4 @@ const _initializeParse = () => {
   _Parse.serverURL = process.env.PARSE_SERVER_URL;
 };
 
-export default () => {
-  _initializeParse();
-  return _Parse;
-}
+export default _Parse;
