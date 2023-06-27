@@ -1,4 +1,5 @@
 const _Parse = require(typeof window !== "undefined" ? "parse" : "parse/node");
+const _isInit = { server: false, client: false };
 
 export const parseLiveClient = () => {
   _Parse.LiveQuery.close();
@@ -20,5 +21,21 @@ const _initializeParse = () => {
   _Parse.serverURL = process.env.PARSE_SERVER_URL;
 };
 
-_initializeParse();
-export default _Parse;
+export default getParse = () => {
+  if (typeof window !== "undefined") {
+    if (!_isInit.server) {
+      _isInit.server = true;
+      _initializeParse();
+    }
+  } else {
+    if (!_isInit.client) {
+      _isInit.client = true;
+      _initializeParse();
+    }
+  }
+
+  return _Parse;
+}
+
+// _initializeParse();
+// export default _Parse;
