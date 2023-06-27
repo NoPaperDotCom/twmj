@@ -1,0 +1,17 @@
+{
+  "terms": "歡迎選購線上台灣麻將計番服務，選購前請先細閱使用條款({{link}})。一經購買，代表你已經同意條款上的使用守則。",
+  "items": {
+    "online-three-days": "三日線上台灣麻將計番服務",
+    "online-one-month": "一個月線上台灣麻將計番服務"
+  },
+  "recipt-message": "* 請保留收據,方便日後核對資料",
+  "recipt-content": {
+    "transactionId": "收據編號: {{objectId}}",
+    "userName": "使用者姓名/電郵: {{userName}}",
+    "item": "購買物品: {{item}}",
+    "cost": "價格: ${{price}} {{currency}}",
+    "startDate": "開始日期: {{startDate}}",
+    "expiredDate": "到期日期: {{expiredDate}}",
+    "remarks": "備註: {{remarks}}"
+  }
+}
