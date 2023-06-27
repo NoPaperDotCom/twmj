@@ -21,17 +21,15 @@ const _initializeParse = () => {
   _Parse.serverURL = process.env.PARSE_SERVER_URL;
 };
 
-_initializeParse();
-
 export default () => {
   if (typeof window !== "undefined") {
-    if (!_isInit.server) {
-      _isInit.server = true;
+    if (!_isInit.client) {
+      _isInit.client = true;
       _initializeParse();
     }
   } else {
-    if (!_isInit.client) {
-      _isInit.client = true;
+    if (!_isInit.server) {
+      _isInit.server = true;
       _initializeParse();
     }
   }
