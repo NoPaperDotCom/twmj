@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { appWithTranslation } from "next-i18next";
 import { useTranslation } from "next-i18next";
+import { initializeParse } from "@/utils/parse";
+initializeParse();
 
 import {
   Container,
