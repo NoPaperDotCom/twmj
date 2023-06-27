@@ -11,6 +11,21 @@ export const parseLiveClient = () => {
   return _client;
 };
 
+export const callParseMethod = async (method, params = {}, abortController = new AbortController()) => {
+  const _query = Object.entries(params).map(([k, v]) => `${k}=${v}`);
+  try {
+    const _response = await fetch(`/api/callmethod?method=${method}&${_query.join("&")}`, {
+      signal: abortController.signal
+    });
+
+    if (_response.status !== 200) { return new AppError({ text: "parse-error", status: _response.status, message: _response.statusText }); }
+    const _data = await _response.json();
+    return _data;
+  } catch (error) {
+    return new AppError({ message: error.message });
+  }
+};
+
 const _initializeParse = () => {
   _Parse.initialize(
     process.env.PARSE_APPLICATION_ID,
