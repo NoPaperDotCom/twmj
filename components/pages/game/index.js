@@ -22,13 +22,13 @@ import { Loading, InviteTag, Tag, PolicyAndSignOutTag } from "@/components/eleme
 import { MenuPopup, InviteModal, FanModal, FinalAccountModal } from "@/components/modal";
 
 import styles from "@/styles/global";
-import Parse, { parseLiveClient } from "@/utils/parse";
+import Parse, { callParseMethod, parseLiveClient } from "@/utils/parse";
 import AppError from "@/utils/error";
 
 const _callParseCloudFunction = async (funcName, params, router, setSetting) => {
   try {
     setOverlayDisplay("loading-popup", true);
-    const { status, ...others } = await Parse.Cloud.run(funcName, params);
+    const { status, ...others } = await callParseMethod(funcName, params);
     if (status === "error") { throw new AppError({ text: "parse-error", status: 500, message: others.error }); }
 
     setOverlayDisplay("loading-popup", false);
