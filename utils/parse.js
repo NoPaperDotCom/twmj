@@ -21,7 +21,7 @@ const _initializeParse = () => {
   _Parse.serverURL = process.env.PARSE_SERVER_URL;
 };
 
-export default getParse = () => {
+export default () => {
   if (typeof window !== "undefined") {
     if (!_isInit.server) {
       _isInit.server = true;
