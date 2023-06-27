@@ -21,6 +21,8 @@ const _initializeParse = () => {
   _Parse.serverURL = process.env.PARSE_SERVER_URL;
 };
 
+_initializeParse();
+
 export default () => {
   if (typeof window !== "undefined") {
     if (!_isInit.server) {
@@ -37,5 +39,4 @@ export default () => {
   return _Parse;
 }
 
-// _initializeParse();
 // export default _Parse;
