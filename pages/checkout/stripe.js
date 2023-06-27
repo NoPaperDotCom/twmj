@@ -2,7 +2,8 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Parse from "@/utils/parse";
+import getParse from "@/utils/parse";
+const Parse = getParse();
 
 import {
   Flex,
