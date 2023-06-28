@@ -48,8 +48,8 @@ export const MenuPopup = ({ id, menuitems, itemPosition = ["start", "start"] }) 
         <Flex rounded="{}" itemPosition={itemPosition} size={["100%", "auto"]} gap={0.5} padding={0.5}>
           <ColorBackground color={styles.color.antitri} />
           {menuitems.map(({ icon, name, onClick }, idx) => 
-            <OutlineBtn size={["100%", "auto"]} onClick={() => { setOverlayDisplay(id, false); onClick(_paramsRef.current); }}>
-              <Flex key={idx} itemPosition={"start"} size={["100%", "auto"]}>
+            <OutlineBtn key={idx} size={["100%", "auto"]} onClick={() => { setOverlayDisplay(id, false); onClick(_paramsRef.current); }}>
+              <Flex itemPosition={"start"} size={["100%", "auto"]}>
                 <Icon size={styles.textSize.large} name={icon} color={styles.color.white} />&nbsp;&nbsp;
                 <Text size={styles.textSize.medium} weight={2} color={styles.color.white}>{name}</Text>
               </Flex>
@@ -252,8 +252,8 @@ export const FinalAccountModal = ({ id= "", t, title, players, amountPerFan, lat
           )}
         </Flex>
         <Flex size={["100%", "auto"]} border={[{ c: { s: 0.3, l: 0.8 }, w: 2 }, "", "", ""]}>
-          {_overall().map(({ player, amount }) => (
-            <Block align="start" size={["100%", "auto"]}>
+          {_overall().map(({ player, amount }, idx) => (
+            <Block key={idx} align="start" size={["100%", "auto"]}>
               <Text size={0.75} weight={2} color={(amount < 0) ? { h: -120, s: 0.5, l: 0.5 } : { s: 0.5, l: 0.5 }}>
                 &nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;{t((amount < 0) ? "index:total-lose" : "index:total-win", { player, amount: Math.abs(amount) })}
               </Text>            
