@@ -661,7 +661,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
   }, [game, eventStatus]);
 
   React.useEffect(() => {
-    console.log(process.env.PUSHER_APP_KEY);
+    console.log(process.env.PARSE_JAVASCRIPT_KEY);
 /*
     const _pusher = new Pusher(process.env.PUSHER_APP_KEY, { cluster: process.env.PUSHER_APP_CLUSTER, forceTLS: true });
     const _channel = _pusher.subscribe(`twmj-${game.objectId}`);
