@@ -1,7 +1,5 @@
 import React from "react";
 import Pusher from 'pusher-js';
-const _pusher = new Pusher(process.env.PUSHER_APP_KEY, { cluster: process.env.PUSHER_APP_CLUSTER });
-
 import { BannerLayout } from "./../default";
 
 import { share } from "de/utils";
@@ -663,6 +661,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
   }, [game, eventStatus]);
 
   React.useEffect(() => {
+    const _pusher = new Pusher(process.env.PUSHER_APP_KEY, { cluster: process.env.PUSHER_APP_CLUSTER });
     const _channel = _pusher.subscribe(`twmj-${game.objectId}`);
     _channel.bind("update", ({ game = false, round = false }) => {
       if (game) { _setGameInfo(old => ({ ...old, ...game })); }
