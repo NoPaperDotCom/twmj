@@ -1,5 +1,5 @@
 import React from "react";
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 import { BannerLayout } from "./../default";
 
 import { share } from "de/utils";
