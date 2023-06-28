@@ -639,7 +639,8 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
       const _windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       const _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       const _mousePointDiff = {  x: _mouseDiffRef.current.x / _windowWidth, y: Math.abs(_mouseDiffRef.current.y / _windowHeight) };
-
+      _mouseDiffRef.current = { x: 0, y: 0 };
+      
       if (_mousePointDiff.x >= 0.125 && _mousePointDiff.y <= 0.05) {
         if (_currentRoundNumber.current !== 1) {
           _currentRoundNumber.current = _currentRoundNumber.current - 1;
