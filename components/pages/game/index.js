@@ -637,8 +637,12 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
     if (eventName === "pointerdown") {
       _mousePointRef.current = { x: event.pageX, y: event.pageY };
     } else if (eventName === "pointerup") {
-      const _mousePointDiff = {  x: event.pageX - _mousePointRef.current.x, y: Math.abs(event.pageY - _mousePointRef.current.y) };
-      if (_mousePointDiff.x >= 100 && _mousePointDiff.y <= 50) {
+      const _windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      const _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      const _mousePointDiff = {  x: (event.pageX - _mousePointRef.current.x) / _windowWidth, y: Math.abs(event.pageY - _mousePointRef.current.y) / _windowHeight };
+      window.alert(`${_mousePointDiff.x} ${_mousePointDiff.y}`);
+      
+      if (_mousePointDiff.x >= 0.2 && _mousePointDiff.y <= 0.05) {
         if (_currentRoundNumber.current !== 1) {
           _currentRoundNumber.current = _currentRoundNumber.current - 1;
           if (!_rounds.current[_currentRoundNumber.current - 1]) {
@@ -650,7 +654,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
             _setGameInfo(old => ({ ...old, currentRoundNumber: old.currentRoundNumber - 1 }));
           }
         }
-      } else if (_mousePointDiff.x <= -100 && _mousePointDiff.y <= 50) {
+      } else if (_mousePointDiff.x <= -0.2 && _mousePointDiff.y <= 0.05) {
         if (_currentRoundNumber.current !== _rounds.current.length) { _currentRoundNumber.current = _currentRoundNumber.current + 1; }
         _setGameInfo(old => (old.currentRoundNumber === _rounds.current.length) ? old : { ...old, currentRoundNumber: old.currentRoundNumber + 1 });
       }
