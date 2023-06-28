@@ -662,6 +662,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
 
   React.useEffect(() => {
     console.log(process.env.PUSHER_APP_KEY);
+/*
     const _pusher = new Pusher(process.env.PUSHER_APP_KEY, { cluster: process.env.PUSHER_APP_CLUSTER });
     const _channel = _pusher.subscribe(`twmj-${game.objectId}`);
     _channel.bind("update", ({ game = false, round = false }) => {
@@ -707,8 +708,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
     });    
 
     return () => { _pusher.unsubscribe(`twmj-${game.objectId}`); return _pusher.disconnect(); }
-
-/*
+    
     let _roundQuery = new Parse.Query("Round");
     _roundQuery = _roundQuery.equalTo("gameId", game.objectId);
     const _roundSubscription = _client.subscribe(_roundQuery);
