@@ -667,8 +667,21 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
     _channel.bind("update", ({ game = false, round = false }) => {
       if (game) { _setGameInfo(old => ({ ...old, ...game })); }
       if (round) {
-
-        
+        if (round.roundNumber > _rounds.current.length) {
+          _rounds.current.push(round);
+          _setGameInfo(old => {
+            if (old.currentRoundNumber === round.roundNumber - 1) {
+              _currentRoundNumber.current = round.roundNumber; 
+              return { ...old, currentRoundNumber: round.roundNumber }; 
+            }
+  
+            return old
+          });
+        } else {
+          const _index = round.roundNumber - 1;
+          _rounds.current[_index] = round;
+          _setGameInfo(old => (old.currentRoundNumber === round.roundNumber) ? { ...old, currentRoundNumber: round.roundNumber } : old);
+        }
       }
       
       return;
@@ -693,7 +706,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
       return;
     });    
 
-    return () => _pusher.disconnect();
+    return () => { _pusher.unsubscribe(`twmj-${game.objectId}`); return _pusher.disconnect(); }
 
 /*
     let _roundQuery = new Parse.Query("Round");
