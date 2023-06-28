@@ -1,4 +1,7 @@
 import React from "react";
+import Pusher from 'pusher-js';
+const _pusher = new Pusher(process.env.PUSHER_APP_KEY, { cluster: process.env.PUSHER_APP_CLUSTER });
+
 import { BannerLayout } from "./../default";
 
 import { share } from "de/utils";
@@ -22,7 +25,7 @@ import { Loading, InviteTag, Tag, PolicyAndSignOutTag } from "@/components/eleme
 import { MenuPopup, InviteModal, FanModal, FinalAccountModal } from "@/components/modal";
 
 import styles from "@/styles/global";
-import Parse, { callParseMethod, parseLiveClient } from "@/utils/parse";
+import { callParseMethod } from "@/utils/parse";
 import AppError from "@/utils/error";
 
 const _callParseCloudFunction = async (funcName, params, router, setSetting) => {
@@ -660,15 +663,39 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
   }, [game, eventStatus]);
 
   React.useEffect(() => {
-    const _client = parseLiveClient();
-    _client.open();
+    const _channel = _pusher.subscribe(`twmj-${game.objectId}`);
+    _channel.bind("update", ({ game = false, round = false }) => {
+      if (game) { _setGameInfo(old => ({ ...old, ...game })); }
+      if (round) {
 
-    let _gameQuery = new Parse.Query("Game");
-    _gameQuery = _gameQuery.equalTo("objectId", game.objectId);
-    const _gameSubscription = _client.subscribe(_gameQuery);
-    _gameSubscription.on("update", g => _setGameInfo(old => ({ ...old, name: g.get("name"), players: g.get("players") })));
-    _gameSubscription.on("delete", g => setSetting(old => ({ ...old, status: "newgame", game: false, rounds: [] })));
+        
+      }
+      
+      return;
+    });
 
+    _channel.bind("delete", ({ game = false, round = false }) => {
+      if (game) { setSetting(old => ({ ...old, status: "newgame", game: false, rounds: [] })); }
+      if (round) {
+        if (round.roundNumber === _rounds.current.length) {
+          _rounds.current.pop();
+          _setGameInfo(old => {
+            if (old.currentRoundNumber === round.roundNumber) {
+              _currentRoundNumber.current = round.roundNumber - 1;
+              return { ...old, currentRoundNumber: round.roundNumber - 1 };
+            }
+            
+            return old
+          });
+        }
+      }
+
+      return;
+    });    
+
+    return () => _pusher.disconnect();
+
+/*
     let _roundQuery = new Parse.Query("Round");
     _roundQuery = _roundQuery.equalTo("gameId", game.objectId);
     const _roundSubscription = _client.subscribe(_roundQuery);
@@ -732,6 +759,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
     });
 
     return () => Parse.LiveQuery.close();
+*/
   }, [game, setSetting]);
 
   return (
