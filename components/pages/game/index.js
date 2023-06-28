@@ -629,20 +629,18 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
   const _rounds = React.useRef(rounds);
   const _currentRoundNumber = React.useRef((rounds.length === 0) ? 1 : rounds[rounds.length - 1].roundNumber);
   const _mousePointRef = React.useRef({ x: 0, y: 0 });
+  const _mouseDiffRef = React.useRef({ x: 0, y: 0 });
   const [_gameInfo, _setGameInfo] = React.useState({ ...game, currentRoundNumber: (rounds.length === 0) ? 1 : rounds[rounds.length - 1].roundNumber });
-  const eventStatus = useEventListener("round-container", "pointerdown,pointerup", true, true);
+  const eventStatus = useEventListener("round-container", "touchstart,touchmove,touchend,mousedown,mouseup", false, true);
 
   React.useEffect(() => {
     const { eventName, event } = eventStatus;
-    if (eventName === "pointerdown") {
-      _mousePointRef.current = { x: event.pageX, y: event.pageY };
-    } else if (eventName === "pointerup") {
+    const _executeSwipe = () => {
       const _windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       const _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      const _mousePointDiff = {  x: (event.pageX - _mousePointRef.current.x) / _windowWidth, y: Math.abs(event.pageY - _mousePointRef.current.y) / _windowHeight };
-      window.alert(`${_mousePointDiff.x} ${_mousePointDiff.y}`);
-      
-      if (_mousePointDiff.x >= 0.2 && _mousePointDiff.y <= 0.05) {
+      const _mousePointDiff = {  x: _mouseDiffRef.current.x / _windowWidth, y: Math.abs(_mouseDiffRef.current.y / _windowHeight) };
+
+      if (_mousePointDiff.x >= 0.125 && _mousePointDiff.y <= 0.05) {
         if (_currentRoundNumber.current !== 1) {
           _currentRoundNumber.current = _currentRoundNumber.current - 1;
           if (!_rounds.current[_currentRoundNumber.current - 1]) {
@@ -654,10 +652,25 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
             _setGameInfo(old => ({ ...old, currentRoundNumber: old.currentRoundNumber - 1 }));
           }
         }
-      } else if (_mousePointDiff.x <= -0.2 && _mousePointDiff.y <= 0.05) {
+      } else if (_mousePointDiff.x <= -0.125 && _mousePointDiff.y <= 0.05) {
         if (_currentRoundNumber.current !== _rounds.current.length) { _currentRoundNumber.current = _currentRoundNumber.current + 1; }
         _setGameInfo(old => (old.currentRoundNumber === _rounds.current.length) ? old : { ...old, currentRoundNumber: old.currentRoundNumber + 1 });
       }
+
+      return;
+    };
+
+    if (eventName === "touchstart") {
+      _mousePointRef.current = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    } else if (eventName === "touchmove") {
+      _mouseDiffRef.current = { x: event.touches[0].clientX - _mousePointRef.current.x, y: event.touches[0].clientY - _mousePointRef.current.y };
+    } else if (eventName === "touchend") {
+      _executeSwipe();
+    } else if (eventName === "mousedown") {
+      _mousePointRef.current = { x: event.clientX, y: event.clientY };
+    } else if (eventName === "mouseup") {
+      _mouseDiffRef.current = { x: event.clientX - _mousePointRef.current.x, y: event.clientY - _mousePointRef.current.y };
+      _executeSwipe();
     }
     
     return () => true;
