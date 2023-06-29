@@ -270,9 +270,9 @@ const _icon = {
 
 const SeatCard = ({ t, userRef, router, setSetting, gameInfo, round, enabledReseat }) => {
   const { resultsTable, pullsTable, bounsTable, playersTable, seat, hostAt, hostCount } = round;
-  const _getPlayerName = (playerId) => (!gameInfo.players[playerId]) ? "--" : gameInfo.players[playerId].name;
+  const _getPlayerName = (playerId) => (playerId.length === 0) ? "--" : gameInfo.players[playerId].name;
   const _getPlayerFan = (playerId) => {
-    if (!gameInfo.players[playerId]) { return 0; }
+    if (playerId.length === 0) { return 0; }
     let _fan = playersTable[playerId];
     Object.entries(pullsTable).forEach(([id, { cancelled, fan }]) => {
       const [_winnerId, _loserId] = id.split("_");
@@ -586,7 +586,7 @@ const RoundContainer = ({ t, userRef, router, setSetting, gameInfo, round, lates
       <MenuPopup id="bouns-menu-popup" menuitems={_menuBounsItems} />
       <MenuPopup id="reseat-menu-popup" menuitems={_menuPlayerItems} />
       {
-        seat.map(playerId => <MenuPopup
+        (seat.indexOf("") != -1) ? null : seat.map(playerId => <MenuPopup
           key={playerId}
           id={`${playerId}-eat-menu-popup`}
           menuitems={[{
@@ -640,7 +640,7 @@ export function InGame({ t, userRef, router, setSetting, game, rounds }) {
       const _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       const _mousePointDiff = {  x: _mouseDiffRef.current.x / _windowWidth, y: Math.abs(_mouseDiffRef.current.y / _windowHeight) };
       _mouseDiffRef.current = { x: 0, y: 0 };
-      
+
       if (_mousePointDiff.x >= 0.125 && _mousePointDiff.y <= 0.05) {
         if (_currentRoundNumber.current !== 1) {
           _currentRoundNumber.current = _currentRoundNumber.current - 1;
