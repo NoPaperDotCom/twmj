@@ -270,9 +270,9 @@ const _icon = {
 
 const SeatCard = ({ t, userRef, router, setSetting, gameInfo, round, enabledReseat }) => {
   const { resultsTable, pullsTable, bounsTable, playersTable, seat, hostAt, hostCount } = round;
-  const _getPlayerName = (playerId) => (playerId.length === 0) ? "--" : gameInfo.players[playerId].name;
+  const _getPlayerName = (playerId) => (!gameInfo.players[playerId]) ? "--" : gameInfo.players[playerId].name;
   const _getPlayerFan = (playerId) => {
-    if (playerId.length === 0) { return 0; }
+    if (!gameInfo.players[playerId]) { return 0; }
     let _fan = playersTable[playerId];
     Object.entries(pullsTable).forEach(([id, { cancelled, fan }]) => {
       const [_winnerId, _loserId] = id.split("_");
