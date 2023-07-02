@@ -22,7 +22,7 @@ import { Loading, InviteTag, Tag, PolicyAndSignOutTag } from "@/components/eleme
 import { MenuPopup, InviteModal, FanModal, FinalAccountModal } from "@/components/modal";
 
 import styles from "@/styles/global";
-import Parse, { callParseMethod, parseLiveClient } from "@/utils/parse";
+import Parse, { parseLiveClient } from "@/utils/parse";
 import AppError from "@/utils/error";
 
 const _callParseCloudFunction = async (funcName, params, router, setSetting) => {
