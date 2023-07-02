@@ -92,10 +92,11 @@ export async function getServerSideProps({ params, query, req, res }) {
   }
 
   const _ret = await _oauthRedirect(provider, { code: query.code, redirectURL: _redirectURL });
-  if (_ret instanceof Error) {
+  if (_ret instanceof Error || _ret.error) {
+    const _message = (_ret instanceof Error) ? _ret.message : _ret.error;
     return {
       redirect: {
-        destination: `/error?message=${_ret.message}`,
+        destination: `/error?message=${_message}`,
         permanent: false
       }
     };
